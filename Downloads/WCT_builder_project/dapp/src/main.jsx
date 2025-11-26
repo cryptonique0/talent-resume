@@ -2,33 +2,52 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
 
-import {
-  WagmiConfig,
-  createConfig,
-  configureChains,
-} from 'wagmi'
-import { mainnet } from 'wagmi/chains'
+import { WagmiConfig, createConfig, configureChains } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
-import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum'
-import { Web3Modal } from '@web3modal/react'
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+import { InjectedConnector } from 'wagmi/connectors/injected'
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 
-const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID
+// Target: Celo Alfajores chain
+const alfajores = {
+  id: 44787,
+  name: 'Alfajores',
+  network: 'alfajores',
+  nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
+  rpcUrls: { default: { http: ['https://alfajores-forno.celo-testnet.org'] } },
+  testnet: true,
+}
 
-const chains = [mainnet]
+const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || ''
 
-const { publicClient } = configureChains(chains, [w3mProvider({ projectId }), publicProvider()])
+const { publicClient } = configureChains(
+  [alfajores],
+  [
+    jsonRpcProvider({ rpc: (chain) => ({ http: chain.rpcUrls.default.http[0] }) }),
+    publicProvider(),
+  ]
+)
 
-const wagmiConfig = createConfig({
-  autoConnect: true,
-  connectors: w3mConnectors({ projectId, chains }),
-  publicClient,
-})
+const connectors = [
+  new InjectedConnector({ chains: [alfajores] }),
+  new WalletConnectConnector({
+    chains: [alfajores],
+    options: {
+      projectId,
+      // Optional: metadata for WalletConnect modal
+      metadata: {
+        name: 'WCT DApp',
+        description: 'Demo dapp with WalletConnect on Celo Alfajores',
+        url: 'http://localhost:5173',
+      },
+    },
+  }),
+]
 
-const ethereumClient = new EthereumClient(wagmiConfig, chains)
+const wagmiConfig = createConfig({ autoConnect: true, connectors, publicClient })
 
 createRoot(document.getElementById('root')).render(
   <WagmiConfig config={wagmiConfig}>
     <App />
-    <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
   </WagmiConfig>
 )
