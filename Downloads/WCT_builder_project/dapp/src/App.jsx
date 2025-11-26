@@ -8,6 +8,8 @@ import StatusBar from './components/StatusBar'
 import BalanceOf from './components/BalanceOf'
 import { TOKENS } from './config/tokens'
 import SwitchNetwork from './components/SwitchNetwork'
+import TokenSelector from './components/TokenSelector'
+import TransactionDemo from './components/TransactionDemo'
 import { formatAddress } from './lib/format'
 
 export default function App() {
@@ -36,6 +38,7 @@ export default function App() {
 
   const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID
   const missingProjectId = !projectId || projectId === 'your_project_id_here'
+  const [selectedToken, setSelectedToken] = useState(TOKENS.cUSD.address)
 
   const connectorsReady = connectors && connectors.length > 0
 
@@ -56,7 +59,12 @@ export default function App() {
               </button>
             </div>
             <NetworkInfo />
+            <TokenSelector tokens={TOKENS} value={selectedToken} onChange={setSelectedToken} />
             <BalanceOf tokenAddress={TOKENS.cUSD.address} label="cUSD" />
+            {selectedToken && selectedToken !== TOKENS.cUSD.address && (
+              <BalanceOf tokenAddress={selectedToken} label="Selected token" />
+            )}
+            <TransactionDemo tokenAddress={selectedToken} />
             {sig && (
               <pre style={{ marginTop: 12, maxWidth: 800, whiteSpace: 'break-spaces' }}>{sig}</pre>
             )}
