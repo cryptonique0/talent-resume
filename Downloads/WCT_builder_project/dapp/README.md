@@ -1,13 +1,13 @@
 # WCT DApp (WalletConnect demo)
 
-This is a minimal React + Vite dapp that demonstrates integrating WalletConnect (v2) via Web3Modal and Wagmi.
+This is a minimal React + Vite dapp that demonstrates integrating WalletConnect on Celo (Alfajores testnet) using Wagmi + WalletConnect connector.
 
 Features:
 - Connect/disconnect using WalletConnect v2 (Web3Modal)
 - Display connected address
 - Sign a message demo
 
-Important: WalletConnect v2 requires a Project ID. Create one at https://cloud.walletconnect.com/ and set it in the environment.
+Important: WalletConnect requires a Project ID. This repo contains an example `.env` and we added your Project ID to `dapp/.env` for local dev.
 
 Setup
 
@@ -18,13 +18,8 @@ cd dapp
 npm install
 ```
 
-2. Set your WalletConnect Project ID (example uses Vite env):
-
-Create a file named `.env` in the `dapp/` folder with:
-
-```
-VITE_WALLETCONNECT_PROJECT_ID=your_project_id_here
-```
+2. Set your WalletConnect Project ID (already configured in `dapp/.env` for local dev).
+	- If you want to change it, edit `dapp/.env` and update `VITE_WALLETCONNECT_PROJECT_ID`.
 
 3. Run the dev server:
 
@@ -35,5 +30,6 @@ npm run dev
 Open the app (Vite will print the local URL). Click Connect to open the WalletConnect modal and choose a wallet.
 
 Notes
-- This scaffold targets Ethereum mainnet by default (wagmi `mainnet`). To change chains, edit `src/main.jsx`.
-- The Web3Modal UI is provided by `Web3Modal` component in `src/main.jsx`.
+- Chain: Celo Alfajores (testnet). You can change chains by editing `src/main.jsx` chain config.
+- Connectors: WalletConnect and Injected (e.g., MetaMask).
+- Example actions: sign a message, read current block number.

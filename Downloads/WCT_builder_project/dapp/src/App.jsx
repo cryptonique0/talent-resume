@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import './App.css'
+import React, { useMemo, useState } from 'react'
 import { useAccount, useDisconnect, useSignMessage, useConnect } from 'wagmi'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+import NetworkInfo from './components/NetworkInfo'
 
 export default function App() {
   const { address, isConnected } = useAccount()
@@ -22,6 +24,13 @@ export default function App() {
   }
 
   const wcConnector = connectors.find((c) => c instanceof WalletConnectConnector)
+  const injectedConnector = useMemo(
+    () => connectors.find((c) => c.id === 'injected'),
+    [connectors]
+  )
+
+  const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID
+  const missingProjectId = !projectId || projectId === 'your_project_id_here'
 
   const connectorsReady = connectors && connectors.length > 0
 
@@ -39,6 +48,7 @@ export default function App() {
                 Sign message
               </button>
             </div>
+            <NetworkInfo />
             {sig && (
               <pre style={{ marginTop: 12, maxWidth: 800, whiteSpace: 'break-spaces' }}>{sig}</pre>
             )}
@@ -46,18 +56,31 @@ export default function App() {
         ) : (
           <div>
             <p>No wallet connected.</p>
+            {missingProjectId && (
+              <div style={{ marginBottom: 8, color: '#b45309', background: '#fffbeb', padding: 8, border: '1px solid #fde68a', borderRadius: 6 }}>
+                WalletConnect Project ID is missing. Create one at cloud.walletconnect.com and set VITE_WALLETCONNECT_PROJECT_ID in dapp/.env
+              </div>
+            )}
             <div>
-              {connectors.map((connector) => (
+              {wcConnector && (
                 <button
-                  key={connector.id}
-                  onClick={() => connect({ connector })}
-                  disabled={!connector.ready || isLoading}
+                  onClick={() => connect({ connector: wcConnector })}
+                  disabled={!wcConnector.ready || isLoading}
                   style={{ marginRight: 8 }}
                 >
-                  {connector.name}
-                  {isLoading && connector.id === pendingConnector?.id && ' (connecting)'}
+                  Connect with WalletConnect
+                  {isLoading && wcConnector.id === pendingConnector?.id && ' (connecting)'}
                 </button>
-              ))}
+              )}
+              {injectedConnector && (
+                <button
+                  onClick={() => connect({ connector: injectedConnector })}
+                  disabled={!injectedConnector.ready || isLoading}
+                >
+                  Connect with Injected
+                  {isLoading && injectedConnector.id === pendingConnector?.id && ' (connecting)'}
+                </button>
+              )}
             </div>
             {error && <div style={{ color: 'red', marginTop: 8 }}>{error.message}</div>}
             <div style={{ marginTop: 8 }}>
