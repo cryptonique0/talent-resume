@@ -20,6 +20,20 @@
       document.getElementById('send').addEventListener('click', () => {
         alert('Contract address: ' + CONTRACT_ADDR + '\nUse WalletConnect/Metamask and ethers/ContractKit to interact.');
       });
+
+      // Small UX tweak: show the amount in CELO units for human readability
+      const amountInput = document.getElementById('amount');
+      amountInput.addEventListener('input', () => {
+        try {
+          const wei = BigInt(amountInput.value || '0');
+          // 1 CELO = 1e18 wei-like units
+          const celo = Number(wei) / 1e18;
+          // show as title tooltip
+          amountInput.title = `${celo} CELO`;
+        } catch (e) {
+          amountInput.title = '';
+        }
+      });
     </script>
   </body>
 </html>
