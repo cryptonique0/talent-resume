@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useAccount, usePublicClient } from 'wagmi'
 
 export default function TransactionHistory() {
@@ -6,6 +6,9 @@ export default function TransactionHistory() {
   const publicClient = usePublicClient()
   const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(false)
+  const [filterType, setFilterType] = useState('all')
+  const [filterStatus, setFilterStatus] = useState('all')
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     // Load transactions from localStorage
@@ -73,42 +76,88 @@ export default function TransactionHistory() {
     }
   }
 
+  const filtered = useMemo(() => {
+    return transactions.filter(tx => {
+      if (filterType !== 'all' && tx.type !== filterType) return false
+      if (filterStatus !== 'all' && tx.status !== filterStatus) return false
+      if (search && !tx.hash.toLowerCase().includes(search.toLowerCase())) return false
+      return true
+    })
+  }, [transactions, filterType, filterStatus, search])
+
   if (!address) return null
 
   return (
     <div style={{ marginTop: 24, padding: 16, border: '1px solid #e5e7eb', borderRadius: 8 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600 }}>Transaction History</h3>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button 
-            onClick={refreshAll} 
-            disabled={loading || transactions.length === 0}
-            style={{ padding: '4px 12px', fontSize: 12, borderRadius: 4, cursor: 'pointer' }}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600 }}>Transaction History</h3>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button
+              onClick={refreshAll}
+              disabled={loading || transactions.length === 0}
+              style={{ padding: '4px 12px', fontSize: 12, borderRadius: 4, cursor: 'pointer' }}
+              aria-label="refresh-transactions"
+            >
+              {loading ? '⟳' : '🔄'} Refresh
+            </button>
+            <button
+              onClick={clearHistory}
+              disabled={transactions.length === 0}
+              style={{ padding: '4px 12px', fontSize: 12, borderRadius: 4, cursor: 'pointer' }}
+              aria-label="clear-transactions"
+            >
+              🗑️ Clear
+            </button>
+          </div>
+        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          <select
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+            style={{ padding: '4px 8px', fontSize: 12, borderRadius: 4 }}
+            aria-label="filter-type"
           >
-            {loading ? '⟳' : '🔄'} Refresh
-          </button>
-          <button 
-            onClick={clearHistory}
-            disabled={transactions.length === 0}
-            style={{ padding: '4px 12px', fontSize: 12, borderRadius: 4, cursor: 'pointer' }}
+            <option value="all">All Types</option>
+            <option value="approve">Approve</option>
+            <option value="transfer">Transfer</option>
+            <option value="claim">Claim</option>
+            <option value="mint">Mint</option>
+          </select>
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            style={{ padding: '4px 8px', fontSize: 12, borderRadius: 4 }}
+            aria-label="filter-status"
           >
-            🗑️ Clear
-          </button>
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="failed">Failed</option>
+          </select>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search hash"
+            aria-label="search-hash"
+            style={{ flex: '1 1 240px', padding: '4px 8px', fontSize: 12, borderRadius: 4, border: '1px solid #e5e7eb' }}
+          />
         </div>
       </div>
 
-      {transactions.length === 0 ? (
+      {filtered.length === 0 ? (
         <div style={{ textAlign: 'center', padding: 24, color: '#9ca3af', fontSize: 14 }}>
-          No transactions yet. Start by claiming or transferring tokens!
+          {transactions.length === 0 ? 'No transactions yet. Start by claiming or transferring tokens!' : 'No transactions match current filters.'}
         </div>
       ) : (
         <div style={{ maxHeight: 300, overflowY: 'auto' }}>
-          {transactions.map((tx, i) => (
+          {filtered.map((tx, i) => (
             <div 
               key={tx.hash} 
               style={{ 
                 padding: 12, 
-                borderBottom: i < transactions.length - 1 ? '1px solid #f3f4f6' : 'none',
+                borderBottom: i < filtered.length - 1 ? '1px solid #f3f4f6' : 'none',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 12
