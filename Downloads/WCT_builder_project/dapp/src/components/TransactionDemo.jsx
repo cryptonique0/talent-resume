@@ -3,9 +3,12 @@ import { useAccount, usePublicClient, usePrepareContractWrite, useContractWrite,
 import { erc20Abi } from '../abi/erc20'
 import { rewardsAbi } from '../abi/rewards'
 import { parseUnits } from 'viem'
+import { useToast } from './Toast'
+import { addToHistory } from './TransactionHistory'
 
 export default function TransactionDemo({ tokenAddress }) {
   const { address, isConnected } = useAccount()
+  const toast = useToast()
   const publicClient = usePublicClient()
   const [decimals, setDecimals] = useState(18)
   const [symbol, setSymbol] = useState('')
@@ -113,6 +116,57 @@ export default function TransactionDemo({ tokenAddress }) {
     enabled: isConnected && !!tokenAddress && !!mintArgs,
   })
   const { write: writeMint, data: mintTx, error: mintError, isLoading: isMinting } = useContractWrite(mintConfig)
+
+  // Toast + history lifecycle side effects
+  React.useEffect(() => {
+    if (approveTx?.hash) {
+      toast.info('Approve transaction broadcast')
+      if (address) addToHistory(address, approveTx.hash, 'approve')
+    }
+  }, [approveTx?.hash])
+  React.useEffect(() => {
+    if (approveSuccess) toast.success('Approve confirmed')
+  }, [approveSuccess])
+  React.useEffect(() => {
+    if (transferTx?.hash) {
+      toast.info('Transfer transaction broadcast')
+      if (address) addToHistory(address, transferTx.hash, 'transfer')
+    }
+  }, [transferTx?.hash])
+  React.useEffect(() => {
+    if (transferSuccess) toast.success('Transfer confirmed')
+  }, [transferSuccess])
+  React.useEffect(() => {
+    if (claimTx?.hash) {
+      toast.info('Claim transaction broadcast')
+      if (address) addToHistory(address, claimTx.hash, 'claim')
+    }
+  }, [claimTx?.hash])
+  React.useEffect(() => {
+    if (claimSuccess) toast.success('Claim confirmed')
+  }, [claimSuccess])
+  React.useEffect(() => {
+    if (mintTx?.hash) {
+      toast.info('Mint transaction broadcast')
+      if (address) addToHistory(address, mintTx.hash, 'mint')
+    }
+  }, [mintTx?.hash])
+  React.useEffect(() => {
+    if (mintSuccess) toast.success('Mint confirmed')
+  }, [mintSuccess])
+
+  React.useEffect(() => {
+    if (approvePrepError || approveError) toast.error('Approve error: ' + (approvePrepError || approveError).message)
+  }, [approvePrepError, approveError])
+  React.useEffect(() => {
+    if (transferPrepError || transferError) toast.error('Transfer error: ' + (transferPrepError || transferError).message)
+  }, [transferPrepError, transferError])
+  React.useEffect(() => {
+    if (claimPrepError || claimError) toast.error('Claim error: ' + (claimPrepError || claimError).message)
+  }, [claimPrepError, claimError])
+  React.useEffect(() => {
+    if (mintPrepError || mintError) toast.error('Mint error: ' + (mintPrepError || mintError).message)
+  }, [mintPrepError, mintError])
   const { isLoading: mintMining, isSuccess: mintSuccess } = useWaitForTransaction({ hash: mintTx?.hash })
 
   if (!isConnected || !tokenAddress) return null
@@ -144,7 +198,7 @@ export default function TransactionDemo({ tokenAddress }) {
           <button
             aria-label="approve-button"
             title="Approve token allowance"
-            onClick={() => writeApprove?.()}
+            onClick={() => { toast.info('Submitting approve…'); writeApprove?.() }}
             disabled={!writeApprove || isApproving || approveMining || !approveAddressValid || !approveAmountValid}
           >
             {isApproving || approveMining ? 'Approving…' : 'Approve'}
@@ -186,7 +240,7 @@ export default function TransactionDemo({ tokenAddress }) {
           <button
             aria-label="transfer-button"
             title="Transfer tokens to recipient"
-            onClick={() => writeTransfer?.()}
+            onClick={() => { toast.info('Submitting transfer…'); writeTransfer?.() }}
             disabled={!writeTransfer || isTransferring || transferMining || !transferAddressValid || !transferAmountValid}
           >
             {isTransferring || transferMining ? 'Transferring…' : 'Transfer'}

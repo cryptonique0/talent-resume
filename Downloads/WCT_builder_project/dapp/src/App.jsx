@@ -9,6 +9,7 @@ import { TOKENS } from './config/tokens'
 import SwitchNetwork from './components/SwitchNetwork'
 import TokenSelector from './components/TokenSelector'
 import TransactionDemo from './components/TransactionDemo'
+import TransactionHistory from './components/TransactionHistory'
 import { formatAddress } from './lib/format'
 
 export default function App() {
@@ -64,6 +65,7 @@ export default function App() {
               <BalanceOf tokenAddress={selectedToken} label="Selected token" />
             )}
             <TransactionDemo tokenAddress={selectedToken} />
+            <TransactionHistory />
             {sig && (
               <pre style={{ marginTop: 12, maxWidth: 800, whiteSpace: 'break-spaces' }}>{sig}</pre>
             )}
