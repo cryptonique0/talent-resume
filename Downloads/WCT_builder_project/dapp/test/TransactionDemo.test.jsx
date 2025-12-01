@@ -21,7 +21,7 @@ vi.mock('../src/components/Toast', () => ({
 import TransactionDemo from '../src/components/TransactionDemo'
 
 describe('TransactionDemo', () => {
-  it.skip('renders nothing when not connected or tokenAddress missing', () => {
+  it('renders nothing when not connected or tokenAddress missing', () => {
     const { container } = render(<TransactionDemo />)
     expect(container.firstChild).toBeNull()
   })

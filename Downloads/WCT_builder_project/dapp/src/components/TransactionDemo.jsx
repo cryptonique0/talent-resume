@@ -116,6 +116,7 @@ export default function TransactionDemo({ tokenAddress }) {
     enabled: isConnected && !!tokenAddress && !!mintArgs,
   })
   const { write: writeMint, data: mintTx, error: mintError, isLoading: isMinting } = useContractWrite(mintConfig)
+  const { isLoading: mintMining, isSuccess: mintSuccess } = useWaitForTransaction({ hash: mintTx?.hash })
 
   // Toast + history lifecycle side effects
   React.useEffect(() => {
@@ -167,7 +168,6 @@ export default function TransactionDemo({ tokenAddress }) {
   React.useEffect(() => {
     if (mintPrepError || mintError) toast.error('Mint error: ' + (mintPrepError || mintError).message)
   }, [mintPrepError, mintError])
-  const { isLoading: mintMining, isSuccess: mintSuccess } = useWaitForTransaction({ hash: mintTx?.hash })
 
   if (!isConnected || !tokenAddress) return null
 

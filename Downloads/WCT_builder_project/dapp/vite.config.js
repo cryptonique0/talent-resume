@@ -8,7 +8,16 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./test/setup.js'],
     include: ['test/**/*.test.jsx'],
-    exclude: ['test/Rewards.test.js']
+    exclude: ['test/Rewards.test.js'],
+    coverage: {
+      provider: 'v8',
+      thresholds: {
+        lines: 10,
+        functions: 5,
+        branches: 5,
+        statements: 10
+      }
+    }
   },
   build: {
     rollupOptions: {
