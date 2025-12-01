@@ -3,6 +3,13 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./test/setup.js'],
+    include: ['test/**/*.test.jsx'],
+    exclude: ['test/Rewards.test.js']
+  },
   build: {
     rollupOptions: {
       output: {

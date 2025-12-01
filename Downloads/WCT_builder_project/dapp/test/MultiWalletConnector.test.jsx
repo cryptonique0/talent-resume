@@ -27,7 +27,6 @@ describe('MultiWalletConnector', () => {
   it('renders heading and wallet choices', () => {
     render(<MultiWalletConnector />)
     expect(screen.getByText('Connect Your Wallet')).toBeInTheDocument()
-    // should render at least one wallet button
     const buttons = screen.getAllByRole('button')
     expect(buttons.length).toBeGreaterThan(0)
   })

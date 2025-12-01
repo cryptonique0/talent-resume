@@ -1,0 +1,12 @@
+{
+  "name": "wct-builder-root",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "npm --prefix dapp run dev",
+    "build": "npm --prefix dapp run build",
+    "preview": "npm --prefix dapp run preview",
+    "test": "npm --prefix dapp run test",
+    "install:dapp": "npm --prefix dapp ci || npm --prefix dapp install"
+  }
+}
