@@ -22,6 +22,9 @@ import NotificationSystem from './components/NotificationSystem'
 import SwapComponent from './components/SwapComponent'
 import LendingComponent from './components/LendingComponent'
 import UserProfile from './components/UserProfile'
+import TokenSwap from './components/TokenSwap'
+import PortfolioAggregator from './components/PortfolioAggregator'
+import QRCodePayment from './components/QRCodePayment'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { formatAddress } from './lib/format'
 
@@ -83,6 +86,9 @@ export default function App() {
               )}
               <TransactionDemo tokenAddress={selectedToken} />
               <TransactionHistory />
+              <PortfolioAggregator />
+              <TokenSwap />
+              <QRCodePayment />
               <StakingDashboard tokenAddress={selectedToken} />
               <NFTMinting nftContractAddress={selectedToken} /> {/* Placeholder; use actual NFT contract */}
               <AnalyticsDashboard />
