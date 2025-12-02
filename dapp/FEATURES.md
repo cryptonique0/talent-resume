@@ -98,6 +98,27 @@ Manage token vesting schedules.
 - Claim vested tokens
 - Progress tracking
 
+### 14. Yield Farming (🌾)
+Provide liquidity and stake LP tokens to earn rewards.
+- Browse farms across protocols (Ubeswap, SushiSwap, Symmetric, QuickSwap, Moola)
+- View APY, TVL, multipliers, fees
+- Stake/unstake LP tokens, harvest and compound rewards
+- Track active farming positions and earnings
+
+### 15. Staking Pools (💰)
+Stake tokens in flexible or fixed-term pools for APY.
+- CELO, cUSD, cEUR, and LP tokens supported
+- Flexible and locked pools (30D/90D/180D)
+- Minimum stake, lock period, and TVL visibility
+- Claim rewards and unstake with lock validation
+
+### 16. NFT Marketplace (🖼️)
+Discover, buy, list, and manage NFTs.
+- Explore by categories (PFPs, Art, Metaverse, Gaming, Music)
+- Buy instantly or make offers; see seller and collection info
+- List/unlist owned NFTs with price entry
+- Manage "My NFTs" with status and actions
+
 ## Previous Features
 
 ### Price Charts
