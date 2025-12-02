@@ -1,9 +1,30 @@
+export const celo = {
+  id: 42220,
+  name: 'Celo',
+  network: 'celo',
+  nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
+  rpcUrls: { 
+    default: { http: ['https://forno.celo.org'] },
+    public: { http: ['https://forno.celo.org'] }
+  },
+  blockExplorers: {
+    default: { name: 'CeloScan', url: 'https://celoscan.io' }
+  },
+  testnet: false,
+}
+
 export const alfajores = {
   id: 44787,
   name: 'Alfajores',
   network: 'alfajores',
   nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
-  rpcUrls: { default: { http: ['https://alfajores-forno.celo-testnet.org'] } },
+  rpcUrls: { 
+    default: { http: ['https://alfajores-forno.celo-testnet.org'] },
+    public: { http: ['https://alfajores-forno.celo-testnet.org'] }
+  },
+  blockExplorers: {
+    default: { name: 'CeloScan', url: 'https://alfajores.celoscan.io' }
+  },
   testnet: true,
 }
 

@@ -3,6 +3,22 @@ import { formatEther } from 'ethers';
 import { useState } from 'react';
 
 const FAUCETS = {
+  44787: [ // Alfajores (Celo Testnet)
+    {
+      name: 'Celo Alfajores Faucet',
+      url: 'https://faucet.celo.org/alfajores',
+      amount: '1 CELO + stable tokens',
+      requirements: 'None',
+      recommended: true
+    },
+    {
+      name: 'Celo Developers Faucet',
+      url: 'https://celo.org/developers/faucet',
+      amount: 'CELO, cUSD, cEUR, cREAL',
+      requirements: 'None',
+      recommended: true
+    }
+  ],
   11155111: [ // Sepolia
     {
       name: 'Alchemy Sepolia Faucet',
