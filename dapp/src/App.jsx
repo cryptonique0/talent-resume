@@ -31,6 +31,19 @@ import NFTGallery from './components/NFTGallery'
 import TokenApprovalManager from './components/TokenApprovalManager'
 import ENSResolver from './components/ENSResolver'
 import TransactionScheduler from './components/TransactionScheduler'
+import GasTracker from './components/GasTracker'
+import ProfitLossCalculator from './components/ProfitLossCalculator'
+import LiquidityPools from './components/LiquidityPools'
+import CrossChainBridge from './components/CrossChainBridge'
+import TokenCreator from './components/TokenCreator'
+import DAOVoting from './components/DAOVoting'
+import MultisigWallet from './components/MultisigWallet'
+import BatchTransactions from './components/BatchTransactions'
+import ReferralProgram from './components/ReferralProgram'
+import AchievementsLeaderboard from './components/AchievementsLeaderboard'
+import WalletAnalytics from './components/WalletAnalytics'
+import LendingBorrowing from './components/LendingBorrowing'
+import TokenVesting from './components/TokenVesting'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { formatAddress } from './lib/format'
 
@@ -101,6 +114,19 @@ export default function App() {
               <ENSResolver />
               <NFTGallery />
               <TokenApprovalManager />
+              <GasTracker />
+              <ProfitLossCalculator />
+              <LiquidityPools />
+              <CrossChainBridge />
+              <TokenCreator />
+              <DAOVoting />
+              <MultisigWallet />
+              <BatchTransactions />
+              <ReferralProgram />
+              <AchievementsLeaderboard />
+              <WalletAnalytics />
+              <LendingBorrowing />
+              <TokenVesting />
               <StakingDashboard tokenAddress={selectedToken} />
               <NFTMinting nftContractAddress={selectedToken} /> {/* Placeholder; use actual NFT contract */}
               <AnalyticsDashboard />
