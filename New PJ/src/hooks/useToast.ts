@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 export type ToastType = 'success' | 'error' | 'info' | 'warning';
 
@@ -12,19 +12,43 @@ export interface Toast {
 /**
  * Hook for managing toast notifications
  */
+// Global toast store (module-level singleton)
+const toastStore: Toast[] = [];
+const subscribers = new Set<(t: Toast[]) => void>();
+
+const notifySubscribers = () => {
+  subscribers.forEach((cb) => cb([...toastStore]));
+};
+
 export const useToast = () => {
-  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [toasts, setToasts] = useState<Toast[]>(toastStore);
+
+  useEffect(() => {
+    const subscriber = (t: Toast[]) => setToasts(t);
+    subscribers.add(subscriber);
+    // Initialize with current store
+    setToasts([...toastStore]);
+    return () => {
+      subscribers.delete(subscriber);
+    };
+  }, []);
 
   const addToast = useCallback(
     (message: string, type: ToastType = 'info', duration: number = 3000) => {
       const id = Math.random().toString(36).substr(2, 9);
       const toast: Toast = { id, message, type, duration };
 
-      setToasts(prev => [...prev, toast]);
+      toastStore.push(toast);
+      notifySubscribers();
 
       if (duration > 0) {
         setTimeout(() => {
-          removeToast(id);
+          // Auto-remove by id
+          const idx = toastStore.findIndex((t) => t.id === id);
+          if (idx !== -1) {
+            toastStore.splice(idx, 1);
+            notifySubscribers();
+          }
         }, duration);
       }
 
@@ -34,7 +58,11 @@ export const useToast = () => {
   );
 
   const removeToast = useCallback((id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
+    const idx = toastStore.findIndex((t) => t.id === id);
+    if (idx !== -1) {
+      toastStore.splice(idx, 1);
+      notifySubscribers();
+    }
   }, []);
 
   const success = useCallback(

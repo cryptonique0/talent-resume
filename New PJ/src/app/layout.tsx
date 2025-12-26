@@ -2,6 +2,7 @@ import { Web3Provider } from '@/providers/Web3Provider';
 import { ConnectWallet } from '@/components/ConnectWallet';
 import Link from 'next/link';
 import '@/styles/globals.css';
+import ToastContainer from '@/components/ToastContainer';
 
 export const metadata = {
   title: 'Talent Resume - On-Chain Professional Profiles',
@@ -50,6 +51,9 @@ export default function RootLayout({
             <main className="container mx-auto px-4 py-8">
               {children}
             </main>
+
+            {/* Global Toasts */}
+            <ToastContainer />
 
             {/* Footer */}
             <footer className="glass-effect mt-20 border-t border-white/10">
