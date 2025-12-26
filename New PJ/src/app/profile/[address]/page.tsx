@@ -7,6 +7,8 @@ import { CredentialCard } from '@/components/CredentialCard';
 import { AchievementBadge } from '@/components/AchievementBadge';
 import { Timeline } from '@/components/Timeline';
 import { CONTRACT_ADDRESS, ON_CHAIN_RESUME_ABI } from '@/lib/contract';
+import ShareProfile from '@/components/ShareProfile';
+import ExportButton from '@/components/ExportButton';
 
 export default function ProfilePage({ params }: { params: { address: string } }) {
   const { address: userAddress } = params;
@@ -60,6 +62,12 @@ export default function ProfilePage({ params }: { params: { address: string } })
         verified={profile.verified}
         createdAt={Number(profile.createdAt)}
       />
+
+      {/* Share / Export Actions */}
+      <div className="flex items-center gap-3">
+        <ShareProfile address={userAddress} />
+        <ExportButton selector=".max-w-6xl" />
+      </div>
 
       {/* Achievements Section */}
       <section>
